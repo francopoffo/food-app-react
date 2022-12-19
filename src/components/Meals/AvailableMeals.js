@@ -38,6 +38,7 @@ function AvailableMeals() {
         <ul>
           {PIZZA_MEALS.map((pizza) => (
             <MealItem
+              id={pizza.id}
               key={pizza.id}
               name={pizza.name}
               description={pizza.description}
