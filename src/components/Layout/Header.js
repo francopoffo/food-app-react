@@ -7,11 +7,11 @@ function Header() {
   return (
     <Fragment>
         <header className={classes.header}>
-            <h1>FoodApp</h1>
+            <h1>PizzaApp</h1>
             <HeaderCartButton />
         </header>
         <div className={classes['main-image']}>
-            <img src={banner} alt="Mesa posta com vários pratos com comidas deliciosas"/>
+            <img src={banner} alt="Fatias de pizza de calabresa"/>
         </div>
     </Fragment>
   )
