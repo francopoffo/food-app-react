@@ -8,8 +8,6 @@ function AvailableMeals() {
   const [isLoading, setIsLoading] = useState(true);
   const [FetchError, setError] = useState();
 
-  const PIZZA_MEALS = [];
-
   useEffect(() => {
     const fetchPizzas = async () => {
       const response = await fetch(
@@ -21,6 +19,8 @@ function AvailableMeals() {
       }
 
       const data = await response.json();
+
+      const PIZZA_MEALS = [];
 
       for (const key in data) {
         PIZZA_MEALS.push({
