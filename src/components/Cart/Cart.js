@@ -7,7 +7,8 @@ import Checkout from "./Checkout";
 
 function Cart(props) {
   const [isCheckout, setIsCheckout] = useState(false);
-
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [didSubmit, setDidSubmit] = useState(false);
   const cartCtx = useContext(CartContext);
 
   const totalAmount = `R$ ${cartCtx.totalAmount.toFixed(2)}`;
@@ -40,14 +41,36 @@ function Cart(props) {
     setIsCheckout(true);
   };
 
-  return (
-    <Modal onHideCart={props.onHideCart}>
+  const onConfirmOrderHandler = async (orderData) => {
+    setIsSubmitting(true);
+    await fetch(
+      "https://food-app-react-c364f-default-rtdb.firebaseio.com/orders.json",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          user: orderData,
+          orderedItems: cartCtx.items,
+        }),
+      }
+    );
+    setIsSubmitting(false);
+    setDidSubmit(true);
+    cartCtx.clearCart();
+  };
+
+  const cartContent = (
+    <React.Fragment>
       {cartItems}
       <div className={classes.total}>
         <span>Total</span>
         <span>{totalAmount}</span>
       </div>
-      {isCheckout && <Checkout onCancel={props.onHideCart} />}
+      {isCheckout && (
+        <Checkout
+          onConfirm={onConfirmOrderHandler}
+          onCancel={props.onHideCart}
+        />
+      )}
       {!isCheckout && (
         <div className={classes.actions}>
           <button className={classes["button--alt"]} onClick={props.onHideCart}>
@@ -60,6 +83,27 @@ function Cart(props) {
           )}
         </div>
       )}
+    </React.Fragment>
+  );
+
+  const isSubmittingContent = <p>Enviando o seu pedido...</p>;
+
+  const didSubmitContent = (
+    <React.Fragment>
+      <p>Pedido enviado com sucesso!</p>
+      <div className={classes.actions}>
+        <button className={classes.button} onClick={props.onHideCart}>
+          Fechar
+        </button>
+      </div>
+    </React.Fragment>
+  );
+
+  return (
+    <Modal onHideCart={props.onHideCart}>
+      {!isSubmitting && !didSubmit && cartContent}
+      {isSubmitting && isSubmittingContent}
+      {didSubmit && !isSubmitting && didSubmitContent}
     </Modal>
   );
 }

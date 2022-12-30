@@ -14,7 +14,7 @@ function Checkout(props) {
   const complementInput = useRef();
   const cepInput = useRef();
 
-  const confirmHandler = (event) => {
+  const onSubmitHandler = (event) => {
     event.preventDefault();
 
     if (
@@ -43,6 +43,13 @@ function Checkout(props) {
     } else {
       setComplementError(false);
     }
+
+    props.onConfirm({
+      name: nameInput.current.value,
+      CEP: cepInput.current.value,
+      street: streetInput.current.value,
+      complement: complementInput.current.value,
+    });
   };
 
   const onChangeCepHandler = (e) => {
@@ -65,7 +72,7 @@ function Checkout(props) {
   };
 
   return (
-    <form className={classes.form} onSubmit={confirmHandler}>
+    <form className={classes.form} onSubmit={onSubmitHandler}>
       <div className={classes.control}>
         <label htmlFor="name">Nome</label>
         <input ref={nameInput} id="name" type="text" />
